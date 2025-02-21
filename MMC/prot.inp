@@ -1,0 +1,42 @@
+FILE prot
+PRNT DETL !Echo formatted data, print extra inf
+HRDW VC32          ! 32-bit vector
+SVVC SPCC 7.75     ! Solvent cutoff
+SUVC MIGC 0.0      ! MI on the solute
+PBCN RECT 88.00  90.00 124.0 !Rectangular PBC
+MOND -40.0 40.0 -42.0 42.0 -60.0 60.0
+MOVE RAND          ! Random selections
+TEMP 298
+NSLV 500   !10 solvent molecules to start with
+STEP  0.00   00.0   0.55    40.0  60
+! slt, slv stepsize, slt move freq.
+SVPT TIP3 TIP3
+SUPT AM02
+SVPT GENL AM02
+SAMP FBSC 0.5  ! Scaled force-biased sampling
+    2
+ 4.00   0.2   7.0     1.0
+SLVA 18 1 MOL 1 lig ! Read 9 solvent atoms
+RDBD ATOP prot
+SLTA  SMPL MMC FILE 20993
+CNFG RANC ASCI
+WCNF PDB
+DSTC NONE
+GCEN CAVB RSIG ALTI
+! Grand-canonical ens., cavity biased,
+! LJ sigma-based cavity radii, alternating i/d
+   100.0    2.5      1000.0       30   30   30 1000    1    1   0000100     50000
+SACP FIXS 10.0 100000 100
+CNFG READ ASCI
+!CNFG READ PDB
+!RCKP
+!Random configuration of 10 (from NSLV) waters
+! using the given cell size and writing ASCII file
+TRAJ ALLP RGFX
+RUNS 6000000  10000 25000 400000 100000 100000
+!PRTG PDB ALLG AGLS  1 0 0.6
+TRAJ CHRM RGFX
+WCNF PDB
+!FILT SOLV SHL3
+STOP
+
